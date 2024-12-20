@@ -2,13 +2,15 @@ using UnityEngine;
 
 public class CoinCollector : MonoBehaviour
 {
+    private int _scorePerCoin = 1;
+
     public void Collect(Collider2D collider, ref int score)
     {
         if (collider.TryGetComponent(out Coin coin))
         {
             Destroy(collider.gameObject);
 
-            score += 1;
+            score += _scorePerCoin;
             ShowScore(score);
         }
     }

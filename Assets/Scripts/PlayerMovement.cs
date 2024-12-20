@@ -5,6 +5,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Rigidbody2D _rigidbody;
     [SerializeField] private Animator _animator;
 
+    private const string RunningAnimationParameter = "isRunning";
+    private const string JumpingAnimationParameter = "isJumping";
+
     private readonly string _axisX = "Horizontal";
     private bool _isGrounded = false;
     private float _speed = 5f;
@@ -13,13 +16,13 @@ public class PlayerMovement : MonoBehaviour
     private void OnCollisionEnter2D()
     { 
         _isGrounded = true;
-        _animator.SetBool("isJumping", false);
+        _animator.SetBool(JumpingAnimationParameter, false);
     }
 
     private void OnCollisionExit2D()
     {
         _isGrounded = false;
-        _animator.SetBool("isJumping", true);
+        _animator.SetBool(JumpingAnimationParameter, true);
     }
 
     public void Run()
@@ -35,7 +38,7 @@ public class PlayerMovement : MonoBehaviour
             FlipSprite();
         }
 
-        _animator.SetBool("isRunning", isRunning);
+        _animator.SetBool(RunningAnimationParameter, isRunning);
     }
 
     public void Jump()

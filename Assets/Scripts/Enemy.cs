@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private EnemyMovement enemyMovement;
+    [SerializeField] private EnemyMovement _enemyMovement;
 
     private void Update()
     {
-        enemyMovement.Patrol();
+        _enemyMovement.Patrol();
     }
 }
