@@ -3,7 +3,7 @@ using System;
 
 public class CoinCollector : MonoBehaviour
 {
-    public Action OnCoinCollected;
+    public event Action<Coin> CoinCollected;
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
@@ -11,7 +11,7 @@ public class CoinCollector : MonoBehaviour
         {
             Destroy(collider.gameObject);
 
-            OnCoinCollected?.Invoke();
+            CoinCollected?.Invoke(coin);
         }
     }
 }

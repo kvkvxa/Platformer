@@ -2,15 +2,10 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    [SerializeField] private Patrol _patrol;
-
-    private bool _isPatrolling = true;
+    [SerializeField] private EnemyMover _mover;
 
     private void FixedUpdate()
     {
-        if (_isPatrolling)
-        {
-            _patrol.Move();
-        }
+        _mover.Move();
     }
 }

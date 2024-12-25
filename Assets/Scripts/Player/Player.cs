@@ -8,16 +8,16 @@ public class Player : MonoBehaviour
 
     private void OnEnable()
     {
-        _coinCollector.OnCoinCollected += AddCoin;
+        _coinCollector.CoinCollected += AddCoin;
     }
 
     private void OnDisable()
     {
-        _coinCollector.OnCoinCollected -= AddCoin;
+        _coinCollector.CoinCollected -= AddCoin;
     }
 
-    private void AddCoin()
+    private void AddCoin(Coin coin)
     {
-        _wallet.IncreaseBalance();
+        _wallet.IncreaseBalance(coin.Score);
     }
 }
