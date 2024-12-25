@@ -12,15 +12,20 @@ public class PlayerMover : MonoBehaviour
     private bool _hasJumpInput = false;
     private float _grounCheckCircleRadius = 1f;
     private float _restingSpeed = Mathf.Epsilon;
+    private float _directionX = 0f;
 
     public bool IsGrounded { get; private set; } = false;
-    public float DirectionX { get; private set; } = 0f;
 
     private void FixedUpdate()
     {
         IsGrounded = Physics2D.OverlapCircle(_groundCheckCircleCenter.position, _grounCheckCircleRadius, _groundLayer);
 
-        Move(DirectionX);
+        Move(_directionX);
+
+        if (Mathf.Sign(_directionX) != Mathf.Sign(transform.localScale.x) && IsMoving())
+        {
+            Flip();
+        }
 
         if (_hasJumpInput && IsGrounded)
         {
@@ -31,13 +36,13 @@ public class PlayerMover : MonoBehaviour
 
     private void Update()
     {
-        DirectionX = _inputReader.GetDirectionX();
+        _directionX = _inputReader.GetDirectionX();
         _hasJumpInput = _inputReader.HasJumpInput();
     }
 
     public bool IsMoving()
     {
-        return Mathf.Approximately(DirectionX, _restingSpeed) == false;
+        return Mathf.Approximately(_directionX, _restingSpeed) == false;
     }
 
     private void Move(float directionX)
@@ -48,5 +53,12 @@ public class PlayerMover : MonoBehaviour
     private void Jump()
     {
         _rigidbody.AddForce(Vector2.up * _jumpSpeed, ForceMode2D.Impulse);
+    }
+
+    private void Flip()
+    {
+        Vector3 localScale = transform.localScale;
+        localScale.x *= -1;
+        transform.localScale = localScale;
     }
 }
