@@ -1,23 +1,47 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
 public class Player : MonoBehaviour
 {
-    [SerializeField] private CoinCollector _coinCollector;
-    [SerializeField] private Wallet _wallet;
+    [SerializeField] private InputReader _inputReader;
+    [SerializeField] private PlayerMover _playerMover;
+    [SerializeField] private PlayerAnimator _playerAnimator;
+    [SerializeField] private GroundChecker _groundChecker;
 
-    private void OnEnable()
+    private bool _hasJumpInput = false;
+    private float _directionX = 0f;
+
+    private void Update()
     {
-        _coinCollector.CoinCollected += AddCoin;
+        _directionX = _inputReader.GetDirectionX();
+        _hasJumpInput = _inputReader.HasJumpInput();
     }
 
-    private void OnDisable()
+    private void FixedUpdate()
     {
-        _coinCollector.CoinCollected -= AddCoin;
+        _playerMover.Move(_directionX);
+
+        if (Mathf.Sign(_directionX) != Mathf.Sign(transform.localScale.x) && _playerMover.IsMoving())
+        {
+            _playerMover.Flip();
+        }
+
+        if (_hasJumpInput && _groundChecker.IsGrounded)
+        {
+            _playerMover.Jump();
+            _hasJumpInput = false;
+        }
+
+        UpdateAnimationStates();
     }
 
-    private void AddCoin(Coin coin)
+    private void UpdateAnimationStates()
     {
-        _wallet.IncreaseBalance(coin.Score);
+        bool isRunning = _playerMover.IsMoving();
+        bool isJumping = !_groundChecker.IsGrounded;
+
+        _playerAnimator.UpdateRunningState(isRunning);
+        _playerAnimator.UpdateJumpingState(isJumping);
     }
 }

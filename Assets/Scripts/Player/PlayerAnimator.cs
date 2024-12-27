@@ -1,16 +1,19 @@
 using UnityEngine;
 
-public class PlayerAnimation : MonoBehaviour
+public class PlayerAnimator : MonoBehaviour
 {
     [SerializeField] private Animator _animator;
-    [SerializeField] private PlayerMover _playerMover;
 
-    private int _runningState = Animator.StringToHash("isRunning");
-    private int _jumpingState = Animator.StringToHash("isJumping");
+    private readonly int _runningState = Animator.StringToHash("isRunning");
+    private readonly int _jumpingState = Animator.StringToHash("isJumping");
 
-    private void Update()
+    public void UpdateRunningState(bool isRunning)
     {
-        _animator.SetBool(_runningState, _playerMover.IsMoving());
-        _animator.SetBool(_jumpingState, _playerMover.IsGrounded == false);
+        _animator.SetBool(_runningState, isRunning);
+    }
+
+    public void UpdateJumpingState(bool isJumping)
+    {
+        _animator.SetBool(_jumpingState, isJumping);
     }
 }

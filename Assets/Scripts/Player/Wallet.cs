@@ -2,17 +2,14 @@ using UnityEngine;
 
 public class Wallet : MonoBehaviour
 {
+    [SerializeField] private BalanceTextDisplayer _balanceTextDisplayer;
+
     public int Balance { get; private set; }
 
     public void IncreaseBalance(int amount)
     {
         Balance += amount;
 
-        ShowBalance(Balance);
-    }
-
-    public void ShowBalance(int balance)
-    {
-        print(balance);
+        _balanceTextDisplayer.ShowBalance(Balance);
     }
 }

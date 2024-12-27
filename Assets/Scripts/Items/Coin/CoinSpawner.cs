@@ -1,8 +1,9 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CoinSpawner : MonoBehaviour
 {
-    [SerializeField] private Coin _coin;
+    [SerializeField] private CoinFactory _coinFactory;
     [SerializeField] private Transform[] _spawnPoints;
 
     private void Awake()
@@ -14,7 +15,8 @@ public class CoinSpawner : MonoBehaviour
     {
         foreach (Transform spawnPoint in _spawnPoints)
         {
-            Instantiate(_coin, spawnPoint.position, Quaternion.identity);
+            Coin newCoin = _coinFactory.CreateCoin;
+            newCoin.transform.position = spawnPoint.position;
         }
     }
 }

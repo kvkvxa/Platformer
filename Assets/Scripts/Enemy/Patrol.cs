@@ -7,6 +7,7 @@ public class Patrol : EnemyMover
     private int _currentWaypointIndex = 0;
     private Vector2 _currentWaypoint;
     private float _waypointReachDistance = 0.4f;
+    private Vector2 _lastDirection = Vector2.zero;
 
     private void Awake()
     {
@@ -29,6 +30,17 @@ public class Patrol : EnemyMover
         }
     }
 
+    private bool HasChangedDirection(Vector2 directionToWaypoint)
+    {
+        if (Vector2.Dot(directionToWaypoint, _lastDirection) < 0)
+        {
+            return true;
+        }
+
+        _lastDirection = directionToWaypoint;
+        return false;
+    }
+
     private bool IsAtWaypoint()
     {
         return Rigidbody.position.IsEnoughClose(_currentWaypoint, _waypointReachDistance);
@@ -36,7 +48,7 @@ public class Patrol : EnemyMover
 
     private void MoveToNextWaypoint()
     {
-        _currentWaypointIndex = (_currentWaypointIndex + 1) % _waypoints.Length;
+        _currentWaypointIndex = (++_currentWaypointIndex) % _waypoints.Length;
         _currentWaypoint = _waypoints[_currentWaypointIndex].position;
     }
 }
