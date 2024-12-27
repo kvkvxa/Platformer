@@ -3,15 +3,22 @@ using System;
 
 public class CoinCollector : MonoBehaviour
 {
-    public event Action<Coin> CoinCollected;
+    [SerializeField] private Wallet _wallet;
 
     private void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.TryGetComponent(out Coin coin))
         {
-            Destroy(collider.gameObject);
+            coin.Collected += AddCoin;
 
-            CoinCollected?.Invoke(coin);
+            coin.OnCollected();
         }
+    }
+
+    private void AddCoin(Coin coin)
+    {
+        _wallet.IncreaseBalance(coin.Score);
+
+        coin.Collected -= AddCoin;
     }
 }

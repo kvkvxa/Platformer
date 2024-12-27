@@ -16,15 +16,20 @@ public class Player : MonoBehaviour
     {
         _directionX = _inputReader.GetDirectionX();
         _hasJumpInput = _inputReader.HasJumpInput();
+
+        UpdateAnimationStates();
     }
 
     private void FixedUpdate()
     {
         _playerMover.Move(_directionX);
 
-        if (Mathf.Sign(_directionX) != Mathf.Sign(transform.localScale.x) && _playerMover.IsMoving())
+        if (_playerMover.IsMoving() && Mathf.Abs(transform.localScale.x) > Mathf.Epsilon)
         {
-            _playerMover.Flip();
+            if (Mathf.Sign(_directionX) != Mathf.Sign(transform.localScale.x))
+            {
+                _playerMover.Flip();
+            }
         }
 
         if (_hasJumpInput && _groundChecker.IsGrounded)
@@ -32,8 +37,6 @@ public class Player : MonoBehaviour
             _playerMover.Jump();
             _hasJumpInput = false;
         }
-
-        UpdateAnimationStates();
     }
 
     private void UpdateAnimationStates()
