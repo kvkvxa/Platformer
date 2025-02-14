@@ -1,50 +1,44 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
-public class Player : MonoBehaviour
+[RequireComponent(typeof(Rigidbody2D))]
+public class Player : MonoBehaviour, IDamagable
 {
-    [SerializeField] private InputReader _inputReader;
     [SerializeField] private PlayerMover _playerMover;
     [SerializeField] private PlayerAnimator _playerAnimator;
-    [SerializeField] private GroundChecker _groundChecker;
+    [SerializeField] private BlinkEffect _blinkEffect;
+    [SerializeField] private PlayerStateController _stateController;
+    [SerializeField] private KnockbackHandler _knockbackHandler;
 
-    private bool _hasJumpInput = false;
-    private float _directionX = 0f;
+    private float _health = 100f;
+
+    public bool IsAlive => _health > 0;
 
     private void Update()
     {
-        _directionX = _inputReader.GetDirectionX();
-        _hasJumpInput = _inputReader.HasJumpInput();
-
         UpdateAnimationStates();
     }
 
-    private void FixedUpdate()
+    public void TakeDamage(int damage)
     {
-        _playerMover.Move(_directionX);
+        _health -= damage;
 
-        if (_playerMover.IsMoving() && Mathf.Abs(transform.localScale.x) > Mathf.Epsilon)
+        if (_health <= 0)
         {
-            if (Mathf.Sign(_directionX) != Mathf.Sign(transform.localScale.x))
-            {
-                _playerMover.Flip();
-            }
+            _health = 0;
+            _stateController.SetActive(false);
+            _playerAnimator.UpdateDeathState(true);
         }
-
-        if (_hasJumpInput && _groundChecker.IsGrounded)
+        else
         {
-            _playerMover.Jump();
-            _hasJumpInput = false;
+            _knockbackHandler.StartKnockback();
+            _blinkEffect.StartBlink();
         }
     }
 
     private void UpdateAnimationStates()
     {
-        bool isRunning = _playerMover.IsMoving();
-        bool isJumping = !_groundChecker.IsGrounded;
-
-        _playerAnimator.UpdateRunningState(isRunning);
-        _playerAnimator.UpdateJumpingState(isJumping);
+        _playerAnimator.UpdateRunningState(_playerMover.IsMoving());
+        _playerAnimator.UpdateJumpingState(_playerMover.IsJumping());
     }
 }

@@ -3,30 +3,61 @@ using UnityEngine;
 public class PlayerMover : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D _rigidbody;
-    [SerializeField] private float _speed = 5f;
-    [SerializeField] private float _jumpSpeed = 7f;
+    [SerializeField] private InputReader _inputReader;
+    [SerializeField] private GroundChecker _groundChecker;
+    [SerializeField] private PlayerStateController _stateController;
+    [SerializeField] private float _moveSpeed = 5f;
+    [SerializeField] private float _jumpForce = 7f;
 
-    private float _restingSpeed = Mathf.Epsilon;
+    private float _directionX;
+    private bool _isJumping;
 
-    public void Move(float directionX)
+    private float _threshold = 0.01f;
+
+    private void Update()
     {
-        _rigidbody.linearVelocity = new Vector2(directionX * _speed, _rigidbody.linearVelocity.y);
+        _directionX = _inputReader.GetMove();
+
+        _isJumping = _inputReader.GetJump();
     }
 
-    public void Jump()
+    private void FixedUpdate()
     {
-        _rigidbody.AddForce(Vector2.up * _jumpSpeed, ForceMode2D.Impulse);
+        if (_stateController.IsActive == false)
+            return;
+
+        Move(_directionX);
+
+        if (_isJumping)
+            Jump();
     }
 
-    public void Flip()
+
+    public bool IsMoving() => Mathf.Abs(_rigidbody.linearVelocity.x) > _threshold;
+    public bool IsJumping() => Mathf.Abs(_rigidbody.linearVelocity.y) > _threshold;
+
+    private void Move(float directionX)
     {
-        Vector3 localScale = transform.localScale;
-        localScale.x *= -1;
-        transform.localScale = localScale;
+        _rigidbody.linearVelocity = new Vector2(directionX * _moveSpeed, _rigidbody.linearVelocity.y);
+
+        Flip(directionX);
     }
 
-    public bool IsMoving()
+    private void Jump()
     {
-        return Mathf.Approximately(_rigidbody.linearVelocity.x, _restingSpeed) == false;
+        if(_groundChecker.IsGrounded == false)
+            return;
+
+        _rigidbody.AddForce(Vector2.up * _jumpForce, ForceMode2D.Impulse);
+    }
+
+    private void Flip(float directionX)
+    {
+        if (Mathf.Sign(directionX) != Mathf.Sign(transform.localScale.x))
+        {
+            Vector3 localScale = transform.localScale;
+            localScale.x *= -1;
+            transform.localScale = localScale;
+        }
     }
 }
