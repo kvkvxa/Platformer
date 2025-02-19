@@ -7,7 +7,7 @@ public class PlayerAttack : MonoBehaviour, IAttacker
 
     private bool _isShooting;
 
-    public int Damage { get; private set; } = 50;
+    public int Damage { get; private set; } = 1;
 
     private void Update()
     {

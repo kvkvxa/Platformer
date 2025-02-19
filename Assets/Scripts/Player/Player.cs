@@ -9,10 +9,22 @@ public class Player : MonoBehaviour, IDamagable
     [SerializeField] private BlinkEffect _blinkEffect;
     [SerializeField] private PlayerStateController _stateController;
     [SerializeField] private KnockbackHandler _knockbackHandler;
+    [SerializeField] private HealthUI _healthUI;
+    [SerializeField] private Collector _collector;
 
-    private float _health = 100f;
+    private int _health = 3;
 
     public bool IsAlive => _health > 0;
+
+    private void OnEnable()
+    {
+        _collector.OnHealerCollected += Heal;
+    }
+
+    private void OnDisable()
+    {
+        _collector.OnHealerCollected -= Heal;
+    }
 
     private void Update()
     {
@@ -34,6 +46,20 @@ public class Player : MonoBehaviour, IDamagable
             _knockbackHandler.StartKnockback();
             _blinkEffect.StartBlink();
         }
+
+        _healthUI.UpdateHealth(_health);
+    }
+
+    private void Heal(int healthPoints)
+    {
+        _health += healthPoints;
+
+        if (_health > 3)
+        {
+            _health = 3;
+        }
+
+        _healthUI.UpdateHealth(_health);
     }
 
     private void UpdateAnimationStates()

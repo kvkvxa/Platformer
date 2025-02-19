@@ -1,0 +1,60 @@
+using UnityEngine;
+
+public class Patrol : EnemyMover
+{
+    [SerializeField] private Transform[] _waypoints;
+
+    private int _currentWaypointIndex = 0;
+    private Vector2 _currentWaypoint;
+    private float _waypointReachDistance = 1f;
+
+    private void Awake()
+    {
+        if (_waypoints.Length > 0)
+        {
+            // Сохраняем мировые координаты точек
+            _currentWaypoint = _waypoints[0].position;
+        }
+        else
+        {
+            Debug.LogError("Waypoints not set!");
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (_waypoints.Length == 0)
+            return;
+
+        Move();
+    }
+
+    public override void Move()
+    {
+        // Двигаемся к текущей точке с использованием MoveTowards
+        Vector2 currentPosition = Rigidbody.position;
+        Vector2 newPosition = Vector2.MoveTowards(currentPosition, _currentWaypoint, Speed * Time.fixedDeltaTime);
+
+        // Устанавливаем новую позицию объекта
+        Rigidbody.MovePosition(newPosition);
+
+        // Проверяем достижение точки
+        if (IsAtWaypoint())
+        {
+            MoveToNextWaypoint();
+        }
+    }
+
+    private bool IsAtWaypoint()
+    {
+        // Проверяем расстояние между текущей позицией врага и мировой позицией точки
+        return Vector2.Distance(Rigidbody.position, _currentWaypoint) < _waypointReachDistance;
+    }
+
+    private void MoveToNextWaypoint()
+    {
+        // Перемещаемся к следующей точке
+        _currentWaypointIndex = (_currentWaypointIndex + 1) % _waypoints.Length;
+        _currentWaypoint = _waypoints[_currentWaypointIndex].position;  // Берём мировую позицию следующей точки
+    }
+}

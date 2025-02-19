@@ -9,7 +9,7 @@ public class Enemy : MonoBehaviour, IDamagable
 
     private readonly int _deathState = Animator.StringToHash("isDead");
 
-    private int _health = 75;
+    private int _health = 2;
     private bool _isDead = false;
 
     public bool IsAlive => _health > 0;

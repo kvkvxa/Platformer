@@ -4,14 +4,12 @@ using UnityEngine;
 [RequireComponent (typeof(Collider2D))]
 public class Coin : MonoBehaviour
 {
-    public event Action<Coin> Collected;
+    private int _score = 1;
 
-    public int Score { get; private set; } = 1;
-
-    public void OnCollected()
+    public int Collect()
     {
-        Collected?.Invoke(this);
-
         gameObject.SetActive(false);
+
+        return _score;
     }
 }

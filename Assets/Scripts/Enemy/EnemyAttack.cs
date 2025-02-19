@@ -6,7 +6,7 @@ public class EnemyAttack : MonoBehaviour, IAttacker
     [SerializeField] private float _knockbackForce = 2f;
     private float _verticalKnockbackOffset = 1f;
 
-    public int Damage { get; private set; } = 25;
+    public int Damage { get; private set; } = 1;
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
