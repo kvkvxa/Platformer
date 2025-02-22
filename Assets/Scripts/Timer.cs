@@ -6,6 +6,7 @@ public class Timer : MonoBehaviour
 {
     private Action _callback;
     private Coroutine _timerCoroutine;
+    private WaitForSeconds _wait;
 
     public void StartTimer(float duration, Action callback)
     {
@@ -13,12 +14,13 @@ public class Timer : MonoBehaviour
             StopCoroutine(_timerCoroutine);
 
         _callback = callback;
-        _timerCoroutine = StartCoroutine(TimerCoroutine(duration));
+        _wait = new WaitForSeconds(duration);
+        _timerCoroutine = StartCoroutine(TimerCoroutine());
     }
 
-    private IEnumerator TimerCoroutine(float duration)
+    private IEnumerator TimerCoroutine()
     {
-        yield return new WaitForSeconds(duration);
+        yield return _wait;
         _callback?.Invoke();
     }
 

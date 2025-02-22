@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour, IDamagable
 {
-    [SerializeField] private EnemyAI _enemyAI;
+    [SerializeField] private EnemyMovingAI _enemyMovingAI;
     [SerializeField] private Animator _animator;
     [SerializeField] private GroundChecker _groundChecker;
     [SerializeField] private BlinkEffect _blinkEffect;
@@ -20,11 +20,11 @@ public class Enemy : MonoBehaviour, IDamagable
         {
             if (!_isDead)
             {
-                _enemyAI.Move();
+                _enemyMovingAI.Move();
             }
             else
             {
-                _enemyAI.Stop();
+                _enemyMovingAI.Stop();
             }
         }
     }

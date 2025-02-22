@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 [RequireComponent (typeof(Collider2D))]
-public class Coin : MonoBehaviour
+public class Coin : MonoBehaviour, ICollectable
 {
     private int _score = 1;
 
@@ -11,5 +11,10 @@ public class Coin : MonoBehaviour
         gameObject.SetActive(false);
 
         return _score;
+    }
+
+    public void Accept(ICollectableVisitor visitor)
+    {
+        visitor.Visit(this);
     }
 }

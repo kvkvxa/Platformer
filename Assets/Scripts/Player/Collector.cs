@@ -1,21 +1,26 @@
 using System;
 using UnityEngine;
 
-public class Collector : MonoBehaviour
+public class Collector : MonoBehaviour, ICollectableVisitor
 {
-    public event Action<int> OnHealerCollected;
-    public event Action<int> OnCoinCollected;
+    public event Action<int> CoinCollected;
+    public event Action<int> HealerCollected;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.TryGetComponent(out Coin coin))
+        if (collision.TryGetComponent(out ICollectable collectable))
         {
-            OnCoinCollected?.Invoke(coin.Collect());
+            collectable.Accept(this);
         }
+    }
 
-        if (collision.TryGetComponent(out Healer healer))
-        {
-            OnHealerCollected?.Invoke(healer.Collect());
-        }
+    public void Visit(Coin coin)
+    {
+        CoinCollected?.Invoke(coin.Collect());
+    }
+
+    public void Visit(Healer healer)
+    {
+        HealerCollected?.Invoke(healer.Collect());
     }
 }

@@ -5,18 +5,11 @@ public class PlayerAttack : MonoBehaviour, IAttacker
     [SerializeField] private BulletPool _bulletPool;
     [SerializeField] private InputReader _inputReader;
 
-    private bool _isShooting;
-
     public int Damage { get; private set; } = 1;
-
-    private void Update()
-    {
-        _isShooting = _inputReader.GetAttack();
-    }
 
     private void FixedUpdate()
     {
-        if (_isShooting)
+        if (_inputReader.HasAttackInput)
         {
             Shoot();
         }

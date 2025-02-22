@@ -5,14 +5,21 @@ public class BlinkEffect : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer _sprite;
 
-    public float invincibilityDuration = 2f;
-    public float blinkInterval = 0.1f;
+    private float _invincibilityDuration = 2f;
+    private float _blinkInterval = 0.1f;
 
-    private bool isBlinking = false;
+    private WaitForSeconds _waitForBlink;
+
+    private bool _isBlinking = false;
+
+    public void Awake()
+    {
+        _waitForBlink = new WaitForSeconds(_blinkInterval);
+    }
 
     public void StartBlink()
     {
-        if (isBlinking == false)
+        if (_isBlinking == false)
         {
             StartCoroutine(Blink());
         }
@@ -20,16 +27,16 @@ public class BlinkEffect : MonoBehaviour
 
     private IEnumerator Blink()
     {
-        isBlinking = true;
-        float endTime = Time.time + invincibilityDuration;
+        _isBlinking = true;
+        float endTime = Time.time + _invincibilityDuration;
 
         while (Time.time < endTime)
         {
             _sprite.enabled = !_sprite.enabled;
-            yield return new WaitForSeconds(blinkInterval);
+            yield return _waitForBlink;
         }
 
         _sprite.enabled = true;
-        isBlinking = false;
+        _isBlinking = false;
     }
 }

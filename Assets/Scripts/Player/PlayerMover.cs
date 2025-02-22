@@ -5,30 +5,20 @@ public class PlayerMover : MonoBehaviour
     [SerializeField] private Rigidbody2D _rigidbody;
     [SerializeField] private InputReader _inputReader;
     [SerializeField] private GroundChecker _groundChecker;
-    [SerializeField] private PlayerStateController _stateController;
+    [SerializeField] private PlayerControlLock _playerControllerLock;
     [SerializeField] private float _moveSpeed = 5f;
     [SerializeField] private float _jumpForce = 7f;
 
-    private float _directionX;
-    private bool _isJumping;
-
     private float _threshold = 0.01f;
-
-    private void Update()
-    {
-        _directionX = _inputReader.GetMove();
-
-        _isJumping = _inputReader.GetJump();
-    }
 
     private void FixedUpdate()
     {
-        if (_stateController.IsActive == false)
+        if (_playerControllerLock.IsActive == false)
             return;
 
-        Move(_directionX);
+        Move(_inputReader.DirectionX);
 
-        if (_isJumping)
+        if (_inputReader.HasJumpInput)
             Jump();
     }
 
@@ -53,11 +43,9 @@ public class PlayerMover : MonoBehaviour
 
     private void Flip(float directionX)
     {
-        if (Mathf.Sign(directionX) != Mathf.Sign(transform.localScale.x))
+        if (Mathf.Sign(directionX) != Mathf.Sign(transform.forward.x))
         {
-            Vector3 localScale = transform.localScale;
-            localScale.x *= -1;
-            transform.localScale = localScale;
+            transform.rotation = Quaternion.Euler(0f, transform.eulerAngles.y + 180f, 0f);
         }
     }
 }

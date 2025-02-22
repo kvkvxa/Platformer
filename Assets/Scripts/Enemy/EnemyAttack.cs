@@ -36,8 +36,8 @@ public class EnemyAttack : MonoBehaviour, IAttacker
         }
     }
 
-    private void ApplyKnockback(Rigidbody2D rb, Vector2 direction)
+    private void ApplyKnockback(Rigidbody2D rigidbody, Vector2 direction)
     {
-        rb.AddForce(direction * _knockbackForce, ForceMode2D.Impulse);
+        rigidbody.AddForce(direction * _knockbackForce, ForceMode2D.Impulse);
     }
 }

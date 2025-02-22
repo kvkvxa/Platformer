@@ -2,26 +2,29 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
+[RequireComponent(typeof(Rigidbody2D))]
 public class Bullet : MonoBehaviour
 {
+    [SerializeField] private Rigidbody2D _myRigidbody;
+
     public int Damage { get; private set; } = 50;
     public event Action<Bullet, Collider2D> Hit;
 
     private float _speed = 10f;
     private float _direction = 1f;
 
+    private void Update()
+    {
+        _myRigidbody.linearVelocity = new Vector2(_direction * _speed, _myRigidbody.linearVelocity.y);
+    }
+
+    private void OnTriggerEnter2D(Collider2D triggeredBy)
+    {
+        Hit?.Invoke(this, triggeredBy);
+    }
+
     public void SetDirection(float direction)
     {
         _direction = direction;
-    }
-
-    private void Update()
-    {
-        transform.position += _direction * _speed * Time.deltaTime * Vector3.right;
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        Hit?.Invoke(this, other);
     }
 }

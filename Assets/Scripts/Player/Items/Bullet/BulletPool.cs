@@ -20,11 +20,6 @@ public class BulletPool : MonoBehaviour
         );
     }
 
-    private Bullet CreatePooledItem()
-    {
-        return _bulletFactory.Create();
-    }
-
     public Bullet GetBullet()
     {
         return _bulletPool.Get();
@@ -33,5 +28,10 @@ public class BulletPool : MonoBehaviour
     public void ReleaseBullet(Bullet bullet)
     {
         _bulletPool.Release(bullet);
+    }
+
+    private Bullet CreatePooledItem()
+    {
+        return _bulletFactory.Create();
     }
 }

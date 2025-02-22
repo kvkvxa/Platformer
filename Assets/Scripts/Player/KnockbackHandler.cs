@@ -4,11 +4,12 @@ public class KnockbackHandler : MonoBehaviour
 {
     [SerializeField] private Timer _timer;
     [SerializeField] private float _knockbackDuration = 1f;
-    private PlayerStateController _stateController;
+
+    private PlayerControlLock _stateController;
 
     private void Awake()
     {
-        _stateController = GetComponent<PlayerStateController>();
+        _stateController = GetComponent<PlayerControlLock>();
     }
 
     public void StartKnockback()
