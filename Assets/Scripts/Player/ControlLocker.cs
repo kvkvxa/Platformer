@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerStateController : MonoBehaviour
+public class ControlLocker : MonoBehaviour
 {
     private bool _isActive = true;
 

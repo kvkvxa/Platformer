@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
-public class EnemyAttack : MonoBehaviour, IAttacker
+public class EnemyAttacker : MonoBehaviour, IAttacker
 {
     [SerializeField] private float _knockbackForce = 2f;
     private float _verticalKnockbackOffset = 1f;

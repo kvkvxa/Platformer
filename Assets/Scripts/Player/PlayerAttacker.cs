@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerAttack : MonoBehaviour, IAttacker
+public class PlayerAttacker : MonoBehaviour, IAttacker
 {
     [SerializeField] private BulletPool _bulletPool;
     [SerializeField] private InputReader _inputReader;
@@ -23,7 +23,7 @@ public class PlayerAttack : MonoBehaviour, IAttacker
         float direction = Mathf.Sign(transform.localScale.x);
         bullet.SetDirection(direction);
 
-        bullet.Hit += HandleHit;
+        bullet.GotHit += HandleHit;
     }
 
     public void Attack(IDamagable enemy)
@@ -40,6 +40,6 @@ public class PlayerAttack : MonoBehaviour, IAttacker
 
         _bulletPool.ReleaseBullet(bullet);
 
-        bullet.Hit -= HandleHit;
+        bullet.GotHit -= HandleHit;
     }
 }

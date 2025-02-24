@@ -5,7 +5,7 @@ public class PlayerMover : MonoBehaviour
     [SerializeField] private Rigidbody2D _rigidbody;
     [SerializeField] private InputReader _inputReader;
     [SerializeField] private GroundChecker _groundChecker;
-    [SerializeField] private PlayerControlLock _playerControllerLock;
+    [SerializeField] private ControlLocker _controlLocker;
     [SerializeField] private float _moveSpeed = 5f;
     [SerializeField] private float _jumpForce = 7f;
 
@@ -13,7 +13,7 @@ public class PlayerMover : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (_playerControllerLock.IsActive == false)
+        if (_controlLocker.IsActive == false)
             return;
 
         Move(_inputReader.DirectionX);

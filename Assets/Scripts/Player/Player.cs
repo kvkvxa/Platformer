@@ -7,14 +7,21 @@ public class Player : MonoBehaviour, IDamagable
     [SerializeField] private PlayerMover _playerMover;
     [SerializeField] private PlayerAnimator _playerAnimator;
     [SerializeField] private BlinkEffect _blinkEffect;
-    [SerializeField] private PlayerControlLock _playerControllerLock;
+    [SerializeField] private ControlLocker _controlLocker;
     [SerializeField] private KnockbackHandler _knockbackHandler;
     [SerializeField] private HealthUI _healthUI;
     [SerializeField] private Collector _collector;
 
-    private int _health = 3;
+    private int _maxHealth = 3;
+    private int _health;
 
     public bool IsAlive => _health > 0;
+
+    public void Awake()
+    {
+        _health = _maxHealth;
+        _healthUI.UpdateHealth(_health);
+    }
 
     private void OnEnable()
     {
@@ -38,7 +45,7 @@ public class Player : MonoBehaviour, IDamagable
         if (_health <= 0)
         {
             _health = 0;
-            _playerControllerLock.SetActive(false);
+            _controlLocker.SetActive(false);
             _playerAnimator.UpdateDeathState(true);
         }
         else
@@ -54,9 +61,9 @@ public class Player : MonoBehaviour, IDamagable
     {
         _health += healthPoints;
 
-        if (_health > 3)
+        if (_health > _maxHealth)
         {
-            _health = 3;
+            _health = _maxHealth;
         }
 
         _healthUI.UpdateHealth(_health);
